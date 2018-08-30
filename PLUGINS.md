@@ -1,9 +1,23 @@
 # Plugins
 
-## Hello world
+## Basic style
 
-* Create new file custom/hello_word.py or jarviscli/packages/hello_world.py with:
+There are two equivalent ways to declare Plugins
 
+### Decorator-style
+Shoud be used for **small** plugins.
+
+```
+from plugin import plugin
+
+@plugin()
+def hello_world(jarvis, s):
+    """Prints \"hello world!\""""
+    jarvis.say("Hello World!")
+```
+
+### Class-style
+Should be used for more **complex** plugins.
 ```
 from plugin import Plugin
 
@@ -25,59 +39,40 @@ class HelloWorld(Plugin):
         jarvis.say("Hello world!")
 ```
 
-You just created a new command HelloWorld.
-
-Let's try out!
-
-* run Jarvis
-* Type help HelloWorld -> watch Class doc String print
-* Type HelloWorld -> watch run() being executed
-
-Few words about class-Name:
-
-* Class-Name equals command name
-* Case-insenstive
-* One word: Do not use _ (unless [Two word command](PLUGINS.md#two-word-commands))
-* Everything after two _ (__) is ignored
+Ignore everything except "run" for now.
 
 
-Run-Parameters:
+## Naming
 
-* jarvis -> instance of CmdInterpreter.JarvisAPI. You'll probably most need say(text, color=None) to print/say stuff.
-* s -> the complete command string the user entered.
+* Class/Method Name = command you enter in Jarvis prompt
+* Case-insenstive - Jarvis commands are always lower case
+* Do not use "_"
+* __ means "comment" - everything beyond is ignored
 
+So these plugins are equivalent:
 
-## Short "Decorator" style
+* HelloWorld
+* helloworld
+* HelloWorld__LINUX_ONLY
 
-For small commands, there is an alternative, compact declaration style:
+But **NOT**:
 
-```
-form plugin import plugin
+* hello_world
 
-
-@plugin()
-def helloWorld(jarvis, s):
-    """Description of Hello world"""
-    jarvis.say("Hello world!")
-```
-
-Note the difference between plugin (Decorator) and Plugin (Class).
-
-Since @plugin converts the method to a Plugin-Subclass, there is no real difference between Decorator and Class-style.
-
-For bigger plugins (>10 lines) it is strongly recommendet to use Class-style. 
+That means something totally [different](PLUGINS.md#two-word-commands).
 
 
+## Run-Parameter
 
-## "Advanced" Plugin Features
+* 1: jarvis -> instance of CmdInterpreter.JarvisAPI. You'll probably most need say(text, color=None) to print/say stuff.
+* 2: s -> string; what the user entered
+
+
+## Features
 
 ### Alias
 
-"Goodbye", "Close", "Exit" - these commands should all do the same.
-
-So that you don't have to create 3 Plugins, there is the "alias"-feature.
-
-If you - for example - want "Hello" and "Hi" to be aliases for HelloWorld, write something like
+Example:
 
 Class-style:
 ```
@@ -95,6 +90,10 @@ from plugin import plugin, alias
 def helloWorld(jarvis, s):
    (...)
 ```
+
+This would alias "HelloWorld" to "Hello" and "Hi".
+
+An Alias behaves just like copy-pasting the whole plugin.
 
 ### Require
 
